@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, json } from "react-router-dom";
 
 import EventsList from "../components/EventsList";
 
@@ -22,14 +22,15 @@ export default EventsPage;
 export async function loader() {
   //you can use in this function any browser features (cookies, localStorage ... )
   // but you can not use hooks, because it is not inside of component
-  const response = await fetch("http://localhost:8080/events");
+  const response = await fetch("http://localhost:8080/eventsdd");
 
   if (!response.ok) {
     //  return {isError: true, message: 'Could not fetch events'}
     // throw { message: "Could not fetch events" };
-    throw new Response(JSON.stringify({ message: "Could not fetch events" }), {
-      status: 500,
-    });
+    // throw new Response(JSON.stringify({ message: "Could not fetch events" }), {
+    //   status: 500,
+    // });
+    throw json({ message: "Could not fetch events" }, { status: 500 }); //more convenient way
   } else {
     // const resData = await response.json();
     // return resData.events
