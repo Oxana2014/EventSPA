@@ -43,6 +43,10 @@ body {
   margin: 0;
 }
 
+main {
+  text-align: center;
+}
+
 ul {
   list-style: none;
   margin: 0;
