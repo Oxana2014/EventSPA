@@ -22,7 +22,7 @@ export default EventsPage;
 export async function loader() {
   //you can use in this function any browser features (cookies, localStorage ... )
   // but you can not use hooks, because it is not inside of component
-  const response = await fetch("http://localhost:8080/eventsdd");
+  const response = await fetch("http://localhost:8080/events");
 
   if (!response.ok) {
     //  return {isError: true, message: 'Could not fetch events'}
