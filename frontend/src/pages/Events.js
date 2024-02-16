@@ -1,25 +1,31 @@
-import { useLoaderData, json } from "react-router-dom";
+import Suspense from "react";
+import { useLoaderData, json, defer, Await } from "react-router-dom";
 
 import EventsList from "../components/EventsList";
 
 function EventsPage() {
-  const data = useLoaderData();
-  if (data.isError) {
-    return <p>{data.message}</p>;
-  }
-  const events = data.events;
+  const { events } = useLoaderData();
+
+  console.log(events);
 
   return (
-    <>
-      <EventsList events={events} />
-      {/* //   <EventsList /> */}
-    </>
+    <Suspense fallback={<p>'Loading...'</p>}>
+      <Await resolve={events}>
+        {/* //this function will be executed by react when data is ready*/}
+        {loadedEvents => {
+            console.log(loadedEvents)
+          return <EventsList events={loadedEvents} />
+        }
+          }
+      </Await>
+    </Suspense>
   );
+  //);
 }
 
 export default EventsPage;
 
-export async function loader() {
+async function loadEvents() {
   //you can use in this function any browser features (cookies, localStorage ... )
   // but you can not use hooks, because it is not inside of component
   const response = await fetch("http://localhost:8080/events");
@@ -35,6 +41,16 @@ export async function loader() {
     // const resData = await response.json();
     // return resData.events
     //  const res = new Response('your data', {status: 201})
-    return response;
+    // return response;
+    //if we use defer():
+    const resData = await response.json();
+    console.log(resData);
+    return resData.events;
   }
+}
+
+export function loader() {
+  return defer({
+    events: loadEvents(),
+  });
 }
